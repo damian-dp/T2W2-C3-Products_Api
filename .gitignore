@@ -1,0 +1,38 @@
+# Ignore editor and IDE files
+.vscode/
+.idea/
+
+# Ignore build artifacts
+build/
+dist/
+node_modules/
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore environment-specific files
+.env
+.env.local
+.env.*.local
+
+# Ignore package lock files
+package-lock.json
+yarn.lock
+
+# Ignore compiled code
+*.class
+*.jar
+*.war
+*.pyc
+
+# Ignore database files
+*.db
+*.sqlite
+
+# Ignore operating system files
+.DS_Store
+Thumbs.db
+
+.venv/
+__pycache__/
