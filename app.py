@@ -88,30 +88,44 @@ def drop_tables():
 # Get all products
 @app.route("/products")
 def get_products():
+    
     # SELECT * FROM products
     stmt = db.select(Product) # Result [[Product1], [Product2]]
     products_list = db.session.scalars(stmt) # ScalarResult [Product1, Product2]
+    
+    # Serialize the list of products
     data = products_schema.dump(products_list)
-    return data
+    
+    return data                                                                     # Return the list of products as a response to the client               
 
 
 # Get a single product
 @app.route("/products/<int:product_id>")
 def get_product(product_id):
+    
     # SELECT * FROM products WHERE id = id
     stmt = db.select(Product).filter_by(id = product_id)
     product = db.session.scalar(stmt)
+    
+    # Check if the product exists
     if product:
+        
+        # Serialize the product object
         data = product_schema.dump(product)
+        
+        # Return it as a response to the client
         return data
+    
     else:
-        return {"error": f"Product with id {product_id} does not exist"}, 404
+        return {"error": f"Product with id {product_id} does not exist"}, 404       # Return an error message if the product does not exist
     
 
 # Create a product
 @app.route("/products", methods=["POST"])
 def create_product():
-    product_fields = request.get_json()
+    
+    product_fields = request.get_json()                                             # Retrieve the data from the request body
+    
     # create a product object/model using the data from the request body
     new_product = Product(
         name=product_fields.get("name"),
@@ -121,12 +135,12 @@ def create_product():
     )
     
     # add to session
-    db.session.add(new_product)
+    db.session.add(new_product)                                                     # Add the updated product to the database
     
     # commit
     db.session.commit()
     
-    return product_schema.dump(new_product), 201
+    return product_schema.dump(new_product), 201                                    # Return the newly created product as a response to the client
 
 
 # Update a product
@@ -134,7 +148,7 @@ def create_product():
 def update_product(product_id):
     
     # Find the product from the database with the id from the URL
-    stmt = db.select(Product).filter_by(id=product_id) # SELECT * FROM products WHERE id = product_id
+    stmt = db.select(Product).filter_by(id=product_id)                              # SELECT * FROM products WHERE id = product_id
     product = db.session.scalar(stmt) 
     
     # Retrieve the data from the request body
